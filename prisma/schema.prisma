@@ -1,0 +1,48 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model Run {
+  id           String   @id @default(uuid())
+  character    String
+  result       String   // "win" | "loss"
+  ascension    Int?
+  actReached   Int?
+  floorReached Int?
+  notes        String?
+  createdAt    DateTime @default(now())
+
+  offers       CardOffer[]
+}
+
+model Card {
+  id        String @id @default(uuid())
+  name      String
+  character String?
+  rarity    String
+  type      String
+  cost      Int?
+
+  offers    CardOffer[]
+}
+
+model CardOffer {
+  id        String @id @default(uuid())
+
+  runId     String
+  cardId    String
+
+  act       Int?
+  floor     Int?
+  source    String   // "combat" | "shop" | "event" | "boss"
+  picked    Boolean  @default(false)
+
+  createdAt DateTime @default(now())
+
+  run       Run   @relation(fields: [runId], references: [id])
+  card      Card  @relation(fields: [cardId], references: [id])
+}
