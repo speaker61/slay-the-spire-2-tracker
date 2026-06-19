@@ -7,42 +7,39 @@ datasource db {
 }
 
 model Run {
-  id           String   @id @default(uuid())
+  id           String      @id @default(uuid())
   character    String
-  result       String   // "win" | "loss"
+  result       String
   ascension    Int?
   actReached   Int?
   floorReached Int?
   notes        String?
-  createdAt    DateTime @default(now())
-
+  createdAt    DateTime    @default(now())
   offers       CardOffer[]
 }
 
 model Card {
-  id        String @id @default(uuid())
+  id        String      @id
   name      String
   character String?
   rarity    String
   type      String
   cost      Int?
-
+  isXCost   Boolean     @default(false)
+  keywords  String[]
+  imageUrl  String?
   offers    CardOffer[]
 }
 
 model CardOffer {
-  id        String @id @default(uuid())
-
+  id        String   @id @default(uuid())
   runId     String
   cardId    String
-
   act       Int?
   floor     Int?
-  source    String   // "combat" | "shop" | "event" | "boss"
+  source    String
   picked    Boolean  @default(false)
-
   createdAt DateTime @default(now())
-
-  run       Run   @relation(fields: [runId], references: [id])
-  card      Card  @relation(fields: [cardId], references: [id])
+  run       Run      @relation(fields: [runId], references: [id])
+  card      Card     @relation(fields: [cardId], references: [id])
 }
