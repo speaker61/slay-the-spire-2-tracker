@@ -27,7 +27,7 @@ export default function RootLayout({
       lang="en"
       className={`${geistMono.variable} ${kreon.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col">{children}</body>
+      <body className="min-h-full flex flex-col bg-[#0d0d1a]">{children}</body>
     </html>
   )
 }

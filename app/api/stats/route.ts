@@ -25,9 +25,22 @@ export type CardStats = {
   winRuns: number
 }
 
-export async function GET() {
-  const res = await fetch('https://spire-codex.com/api/runs/stats', {
-    next: { revalidate: 300 } // cache for 5 minutes
+export async function GET(req: Request) {
+  const { searchParams } = new URL(req.url)
+  const ascension = searchParams.get('ascension') // '10' or null
+  const source = searchParams.get('source') // 'community' or 'mine'
+
+  // Personal stats not yet implemented
+  if (source === 'mine') {
+    return NextResponse.json({})
+  }
+
+  // Build Spire Codex URL with optional ascension filter
+  const codexUrl = new URL('https://spire-codex.com/api/runs/stats')
+  if (ascension) codexUrl.searchParams.set('ascension', ascension)
+
+  const res = await fetch(codexUrl.toString(), {
+    next: { revalidate: 300 }
   })
 
   const data = await res.json()
@@ -35,10 +48,8 @@ export async function GET() {
   const pickRates: CardPickRate[] = data.pick_rates
   const topCards: CardTopStat[] = data.top_cards
 
-  // Build lookup map keyed by card_id
   const statsMap: Record<string, CardStats> = {}
 
-  // Add pick rate data
   for (const entry of pickRates) {
     statsMap[entry.card_id] = {
       pickRate: entry.pick_rate,
@@ -50,7 +61,6 @@ export async function GET() {
     }
   }
 
-  // Merge in WAR data
   for (const entry of topCards) {
     const war = entry.total_runs_with > 0
       ? Math.round((entry.win_runs / entry.total_runs_with) * 1000) / 10
@@ -63,7 +73,7 @@ export async function GET() {
     } else {
       statsMap[entry.card_id] = {
         pickRate: 0,
-        offered: 0, //not available from top_cards
+        offered: 0,
         picked: 0,
         war,
         totalRunsWith: entry.total_runs_with,
