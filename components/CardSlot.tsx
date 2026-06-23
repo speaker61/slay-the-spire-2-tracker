@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect, useRef } from 'react'
+import { CardStats } from '@/app/api/stats/route'
 
 type Card = {
   id: string
@@ -32,7 +33,7 @@ const EMPTY_STATS: Stats = {
   elo: '—',
 }
 
-export default function CardSlot({ onRemove }: { onRemove: () => void }) {
+export default function CardSlot({ onRemove, statsMap = {} }: { onRemove: () => void, statsMap: Record<string, CardStats> }) {
   const [query, setQuery] = useState('')
   const [results, setResults] = useState<Card[]>([])
   const [selected, setSelected] = useState<Card | null>(null)
@@ -66,7 +67,16 @@ export default function CardSlot({ onRemove }: { onRemove: () => void }) {
     setResults([])
   }
 
-  const stats = EMPTY_STATS
+  const stats = selected && statsMap[selected.id]
+    ? {
+        pickRate: `${statsMap[selected.id].pickRate}%`,
+        war: `${statsMap[selected.id].war}%`,
+        warA1: '—',
+        warA2: '—',
+        warA3: '—',
+        elo: '—',
+      }
+    : EMPTY_STATS
 
   return (
     <div className="relative border-b border-[#c9a84c33] py-3 px-2">
