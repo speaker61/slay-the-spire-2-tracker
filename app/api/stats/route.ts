@@ -30,9 +30,12 @@ export async function GET(req: Request) {
   const ascension = searchParams.get('ascension') // '10' or null
   const source = searchParams.get('source') // 'community' or 'mine'
 
-  // Personal stats not yet implemented
   if (source === 'mine') {
-    return NextResponse.json({})
+    const mineUrl = new URL('/api/stats/mine', req.url)
+    if (ascension) mineUrl.searchParams.set('ascension', ascension)
+    const mineRes = await fetch(mineUrl.toString())
+    const mineData = await mineRes.json()
+    return NextResponse.json(mineData)
   }
 
   // Build Spire Codex URL with optional ascension filter

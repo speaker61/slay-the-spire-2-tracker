@@ -15,6 +15,11 @@ model Run {
   floorReached Int?
   notes        String?
   createdAt    DateTime    @default(now())
+  seed         String?
+  gameMode     String?
+  buildId      String?
+  killedBy     String?
+  runTime      Int?
   offers       CardOffer[]
 }
 
@@ -40,6 +45,10 @@ model CardOffer {
   source    String
   picked    Boolean  @default(false)
   createdAt DateTime @default(now())
+  preHp     Int?
+  preMaxHp  Int?
+  preDamage Int?
+  preGold   Int?
   run       Run      @relation(fields: [runId], references: [id])
   card      Card     @relation(fields: [cardId], references: [id])
 }
