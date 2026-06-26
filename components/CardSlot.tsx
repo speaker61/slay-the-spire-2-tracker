@@ -67,10 +67,12 @@ export default function CardSlot({ onRemove, statsMap = {} }: { onRemove: () => 
     setResults([])
   }
 
-  const stats = selected && statsMap[selected.id]
+  const rawStats = selected ? statsMap[selected.id] : null
+
+  const stats = rawStats
     ? {
-        pickRate: `${statsMap[selected.id].pickRate}%`,
-        war: `${statsMap[selected.id].war}%`,
+        pickRate: `${rawStats.pickRate}% (${rawStats.picked}/${rawStats.offered})`,
+        war: `${rawStats.war}%  (${rawStats.winRuns}/${rawStats.totalRunsWith})`,
         warA1: '—',
         warA2: '—',
         warA3: '—',

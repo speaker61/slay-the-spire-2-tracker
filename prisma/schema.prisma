@@ -52,3 +52,29 @@ model CardOffer {
   run       Run      @relation(fields: [runId], references: [id])
   card      Card     @relation(fields: [cardId], references: [id])
 }
+
+model SpirebirdStat {
+  id           String  @id @default(uuid())
+  cardId       String
+  character    String
+  upgraded     Boolean
+  cohort       String
+  elo          Float?
+  eloBT        Float?
+  offered      Int
+  picked       Int
+  pickRate     Float
+  wins         Int
+  winRate      Float?
+  war          Float?
+  warA1        Float?
+  warA2        Float?
+  warA3        Float?
+  cWar         Float?
+  floorScaling Float?
+  warDelta     Float?
+  pHP          Float?
+  pDMG         Float?
+
+  @@index([cardId, cohort])
+}

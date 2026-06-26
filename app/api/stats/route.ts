@@ -28,7 +28,15 @@ export type CardStats = {
 export async function GET(req: Request) {
   const { searchParams } = new URL(req.url)
   const ascension = searchParams.get('ascension') // '10' or null
-  const source = searchParams.get('source') // 'community' or 'mine'
+  const source = searchParams.get('source') // source is spirebird or mine
+
+  if (source === 'spirebird') {
+    const sbUrl = new URL('/api/stats/spirebird', req.url)
+    if (ascension) sbUrl.searchParams.set('ascension', ascension)
+    const sbRes = await fetch(sbUrl.toString())
+    const sbData = await sbRes.json()
+    return NextResponse.json(sbData)
+  }
 
   if (source === 'mine') {
     const mineUrl = new URL('/api/stats/mine', req.url)

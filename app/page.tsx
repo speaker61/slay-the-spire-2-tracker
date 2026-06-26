@@ -5,13 +5,13 @@ import CardSlot from '@/components/CardSlot'
 import { CardStats } from '@/app/api/stats/route'
 
 type AscFilter = 'all' | 'a10'
-type SourceFilter = 'community' | 'mine'
+type SourceFilter = 'codex' | 'spirebird' | 'mine'
 
 export default function Home() {
   const [slots, setSlots] = useState([0, 1, 2])
   const [statsMap, setStatsMap] = useState<Record<string, CardStats>>({})
   const [ascFilter, setAscFilter] = useState<AscFilter>('all')
-  const [sourceFilter, setSourceFilter] = useState<SourceFilter>('community')
+  const [sourceFilter, setSourceFilter] = useState<SourceFilter>('codex')
 
   useEffect(() => {
     const params = new URLSearchParams()
@@ -59,7 +59,8 @@ export default function Home() {
           <button className={toggleClass(ascFilter === 'a10')} onClick={() => setAscFilter('a10')}>A10</button>
         </div>
         <div className="flex gap-1">
-          <button className={toggleClass(sourceFilter === 'community')} onClick={() => setSourceFilter('community')}>Community</button>
+          <button className={toggleClass(sourceFilter === 'codex')} onClick={() => setSourceFilter('codex')}>Spire Codex</button>
+          <button className={toggleClass(sourceFilter === 'spirebird')} onClick={() => setSourceFilter('spirebird')}>Spire Bird</button>
           <button className={toggleClass(sourceFilter === 'mine')} onClick={() => setSourceFilter('mine')}>Mine</button>
         </div>
       </div>
